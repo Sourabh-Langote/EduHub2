@@ -15,7 +15,9 @@ class MainActivity : AppCompatActivity() {
 
         tv_id = findViewById(R.id.tv_id)
 
-        var intent = Intent(this@MainActivity, LoginPage::class.java)
-        startActivity(intent)
+        tv_id.setOnClickListener{
+            var intent = Intent(this@MainActivity, LoginPage::class.java)
+            startActivity(intent)
+        }
     }
 }
