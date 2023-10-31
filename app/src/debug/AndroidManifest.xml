@@ -3,10 +3,10 @@
 
     <application>
         <activity
-            android:name=".RegistrationPage"
+            android:name="loginModule.registrationModule.RegistrationPage"
             android:exported="false" />
         <activity
-            android:name=".LoginModule.LoginPage"
+            android:name="loginModule.LoginPage"
             android:exported="false" />
     </application>
 
