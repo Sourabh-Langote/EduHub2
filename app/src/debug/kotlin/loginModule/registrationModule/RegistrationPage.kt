@@ -10,9 +10,11 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.get
+import androidx.recyclerview.widget.RecyclerView
 import com.example.eduhub.R
 import java.util.Calendar
 
@@ -35,6 +37,10 @@ class RegistrationPage : AppCompatActivity() {
     lateinit var et_re_password: EditText
     lateinit var ll_parent_info: LinearLayout
     lateinit var ll_subject_contaoner: LinearLayout
+    lateinit var rl_class_dropdown: RelativeLayout
+    lateinit var rl_subject_dropdown: RelativeLayout
+    lateinit var rv_class: RecyclerView
+    lateinit var rv_subject: RecyclerView
     var gender: String =""
     var selectedType: String = ""
     var selecteDob: String = ""
@@ -74,6 +80,8 @@ class RegistrationPage : AppCompatActivity() {
         et_re_password = findViewById(R.id.et_re_password)
         ll_parent_info = findViewById(R.id.ll_parent_info)
         ll_subject_contaoner = findViewById(R.id.ll_subject_contaoner)
+        rv_class = findViewById(R.id.rv_class)
+        rv_subject = findViewById(R.id.rv_subject)
 
         if (selectedType == "student"){
             ll_parent_info.visibility = View.VISIBLE
@@ -85,7 +93,15 @@ class RegistrationPage : AppCompatActivity() {
         }
 
         et_date_of_birth.setOnClickListener {
+            showDatePickerDialog()
+        }
 
+        rl_class_dropdown.setOnClickListener {
+            rv_class.visibility = View.VISIBLE
+        }
+
+        rl_subject_dropdown.setOnClickListener {
+            rv_subject.visibility = View.VISIBLE
         }
 
         ll_submit.setOnClickListener {
@@ -114,6 +130,24 @@ class RegistrationPage : AppCompatActivity() {
             }
         }
     }
+
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            this,
+            { view, selectedYear, selectedMonth, selectedDay ->
+                val selectedDate = "$selectedYear-${selectedMonth + 1}-$selectedDay"
+                et_date_of_birth.setText(selectedDate)
+            },
+            year, month, day
+        )
+        datePickerDialog.show()
+    }
+
     private fun validation(
         firstName: String,
         lastName: String,
@@ -144,6 +178,7 @@ class RegistrationPage : AppCompatActivity() {
         val ispPhoneValid = mobileRegex.matches(pPhone)
         val isGenderValid = genderRegex.matches(gender)
         val isDateOfBirthValid = dateOfBirthRegex.matches(dob)
+        val isPasswordValid = passwordRegex.matches(password)
 
         if (firstName == "" || firstName == null){
             Toast.makeText(this, "Enter First Name", Toast.LENGTH_SHORT).show()
@@ -192,9 +227,13 @@ class RegistrationPage : AppCompatActivity() {
             Toast.makeText(this, "Invalid Date Of Birth", Toast.LENGTH_SHORT).show()
         }else if (password == "" || password == null){
             Toast.makeText(this, "Enter Password", Toast.LENGTH_SHORT).show()
-        }else if (re_password == "" || re_password == null){
+        }else if (!isPasswordValid){
+            Toast.makeText(this, "Enter Strong Password", Toast.LENGTH_SHORT).show()
+        }
+        else if (re_password == "" || re_password == null){
             Toast.makeText(this, "Re-Enter Password", Toast.LENGTH_SHORT).show()
-        }else if (password != re_password){
+        }
+        else if (password != re_password){
             Toast.makeText(this, "Password Does Not Match", Toast.LENGTH_SHORT).show()
         }
         return true
